@@ -1,51 +1,29 @@
 "use client";
 
-import Image from "next/image";
-import { useEffect, useState } from "react";
-import { CalendarDays, ChevronDown, Clock3, MapPin, MessageCircle } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { CalendarDays, ChevronDown, Clock3, Heart, MapPin, Menu, MessageCircle, Plane, Volume2, VolumeX, X } from "lucide-react";
 
-const gallery = [
-  "/images/c0c8859d-f923-47ec-b95f-9ce0fa0e1174.jpg", "/images/b5ea757b-3020-47d7-905b-2ba69562a8f9.jpg",
-  "/images/96d910b7-c2a8-4f49-a7df-237eed9b554b.jpg", "/images/3a7257fc-fe4c-4e91-afb9-f70a3222d557.jpg",
-  "/images/1df7a90f-f30c-41b7-987a-4017fc54a819.jpg", "/images/10d73bd7-9b53-4105-9eab-56764f80a1de.jpg",
-];
+const photos = ["9e855fdb-6a91-46ee-b436-e5d7843d88c6.jpg","b5ea757b-3020-47d7-905b-2ba69562a8f9.jpg","10d73bd7-9b53-4105-9eab-56764f80a1de.jpg","1df7a90f-f30c-41b7-987a-4017fc54a819.jpg","96d910b7-c2a8-4f49-a7df-237eed9b554b.jpg","c0c8859d-f923-47ec-b95f-9ce0fa0e1174.jpg"];
 
-function Countdown() {
-  const [time, setTime] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-  useEffect(() => {
-    const tick = () => {
-      const distance = Math.max(0, new Date("2026-10-03T13:00:00+08:00").getTime() - Date.now());
-      setTime({ days: Math.floor(distance / 86400000), hours: Math.floor((distance / 3600000) % 24), minutes: Math.floor((distance / 60000) % 60), seconds: Math.floor((distance / 1000) % 60) });
-    };
-    tick(); const timer = window.setInterval(tick, 1000); return () => window.clearInterval(timer);
-  }, []);
-  return <div className="countdown">{Object.entries(time).map(([label, value]) => <div key={label}><strong>{String(value).padStart(2, "0")}</strong><span>{label}</span></div>)}</div>;
-}
+function Countdown(){const [time,setTime]=useState({days:0,hours:0,minutes:0});useEffect(()=>{const update=()=>{const distance=Math.max(0,new Date("2026-10-03T13:00:00+08:00").getTime()-Date.now());setTime({days:Math.floor(distance/86400000),hours:Math.floor((distance/3600000)%24),minutes:Math.floor((distance/60000)%60)})};update();const timer=window.setInterval(update,60000);return()=>window.clearInterval(timer)},[]);return <div className="countdown" aria-label="Countdown to the wedding">{Object.entries(time).map(([label,value])=><div key={label}><strong>{String(value).padStart(2,"0")}</strong><span>{label}</span></div>)}</div>}
 
-export default function Home() {
-  const [open, setOpen] = useState(false);
-  return <main>
-    <section className="hero">
-      <Image src="/images/9e855fdb-6a91-46ee-b436-e5d7843d88c6.jpg" alt="Dexter and Rosemarie" fill priority className="hero-photo" />
-      <div className="hero-shade" />
-      <nav aria-label="Wedding invitation"><a href="#story" className="monogram">D<span>&amp;</span>R</a><a href="#details">The day</a><a href="#attire">Attire</a><a href="#rsvp">RSVP</a></nav>
-      <div className="hero-copy reveal"><p className="eyebrow">Passport to marriage</p><h1><span>Dexter</span><i>&amp;</i><span>Rosemarie</span></h1><p className="date">03 · 10 · 2026</p></div>
-      <a href="#story" className="scroll-cue" aria-label="Continue to invitation"><span>Open our invitation</span><ChevronDown size={18} /></a>
-    </section>
+export default function Home(){
+  const [opened,setOpened]=useState(false);const [menuOpen,setMenuOpen]=useState(false);const [musicPlaying,setMusicPlaying]=useState(false);const audioRef=useRef<HTMLAudioElement|null>(null);
+  const getAudio=()=>{if(!audioRef.current){audioRef.current=new Audio("/audio/tahanan-el-manu.mp3");audioRef.current.loop=true;audioRef.current.volume=.42}return audioRef.current};
+  const openInvitation=()=>{const audio=getAudio();audio.play().then(()=>setMusicPlaying(true)).catch(()=>setMusicPlaying(false));setOpened(true);window.setTimeout(()=>window.scrollTo(0,0),0)};
+  const toggleMusic=()=>{const audio=getAudio();if(audio.paused){audio.play().then(()=>setMusicPlaying(true)).catch(()=>setMusicPlaying(false))}else{audio.pause();setMusicPlaying(false)}};
+  if(!opened)return <main className="landing"><button className="passport-cover" onClick={openInvitation} aria-label="Open wedding invitation"><span className="cover-title">Passport</span><span className="cover-subtitle">Wedding invitation</span><span className="cover-emblem">D<i>&amp;</i>R</span><span className="cover-names">Dexter Presbitero<br/>Rosemarie Acala</span><span className="cover-open">Tap to open <Plane/></span></button></main>;
 
-    <section id="story" className="intro paper-section"><p className="kicker">With the grace of God and the blessings of our beloved parents</p><h2>We joyfully invite you to witness the uniting of our lives as one.</h2><div className="parents"><div><span>Groom’s parents</span><p>Mr. Wilson Pangilinan<br/>Mrs. Myrna Presbitero</p></div><div className="seal">D<span>&amp;</span>R</div><div><span>Bride’s parents</span><p>Mr. Ronelo Acala<br/>Mrs. Gemma Acala</p></div></div></section>
-
-    <section className="portrait-section"><div className="portrait-frame"><Image src="/images/b5ea757b-3020-47d7-905b-2ba69562a8f9.jpg" alt="Dexter and Rosemarie together" fill sizes="(max-width: 800px) 86vw, 46vw" /></div><div className="verse"><p>Kawikaan 19:14</p><blockquote>“Bahay at mga kayamanan ay minamana sa mga magulang; ngunit ang mabait na asawa ay galing sa Panginoon.”</blockquote></div></section>
-
-    <section id="details" className="details paper-section"><p className="kicker">Your itinerary</p><h2>Save the date</h2><Countdown /><div className="detail-grid"><article><CalendarDays/><span>Date</span><h3>Saturday<br/>October 3, 2026</h3></article><article><Clock3/><span>Time</span><h3>Ceremony · 1:00 PM<br/>Reception · 4:00 PM</h3></article><article><MapPin/><span>Ceremony</span><h3>Iglesia Ni Cristo<br/>Lokal ng Sapalibutad</h3></article><article><MapPin/><span>Reception</span><h3>Finizzio Grande<br/>Bornal St., Sta. Cruz, Magalang</h3></article></div></section>
-
-    <section className="passport-wrap"><Image src="/images/96d910b7-c2a8-4f49-a7df-237eed9b554b.jpg" alt="Passport to marriage invitation details" width={904} height={625} /></section>
-
-    <section id="attire" className="attire"><div><p className="kicker">Dress code</p><h2>Autumn formal</h2><p>We kindly encourage our guests to wear formal attire in our warm wedding colors. Please reserve white for the bride.</p><div className="swatches" aria-label="Wedding color palette">{["#4b1d0b","#76320d","#9b4c21","#bf5b23","#dc7d2c","#dfa05d","#e9b77e"].map(c=><span key={c} style={{background:c}} />)}</div></div><div className="attire-card"><Image src="/images/3a7257fc-fe4c-4e91-afb9-f70a3222d557.jpg" alt="Wedding attire guide" fill sizes="(max-width: 800px) 90vw, 42vw" /></div></section>
-
-    <section className="gallery" aria-label="Wedding invitation gallery">{gallery.map((src, i)=><figure key={src} className={`gallery-${i}`}><Image src={src} alt={i === 0 ? "Dexter and Rosemarie wedding invitation" : "Dexter and Rosemarie invitation detail"} fill sizes="(max-width: 800px) 90vw, 42vw" /></figure>)}</section>
-
-    <section id="rsvp" className="rsvp"><p className="kicker">Kindly reply</p><h2>Will you join us?</h2><p>Please respond on or before <strong>September 25, 2026</strong>. Seats are limited to confirmed guests, and this will be an adults-only celebration.</p><button onClick={()=>setOpen(!open)} aria-expanded={open}><MessageCircle size={18}/>{open ? "Hide contacts" : "RSVP with us"}</button><div className={`contact-card ${open ? "open" : ""}`} aria-hidden={!open}><a href="sms:+639363468327">Dexter · 0936 346 8327</a><a href="sms:+639657245903">Rose · 0965 724 5903</a><p>Messenger: Dexter Presbitero</p></div></section>
-    <footer><div className="footer-mark">D<span>&amp;</span>R</div><p>Cheers to the happy couple</p><small>October 3, 2026 · Magalang, Pampanga</small></footer>
-  </main>;
+  return <main className="invitation">
+    <nav className="nav-shell" aria-label="Main navigation"><a className="monogram" href="#home">D<span>&amp;</span>R</a><button className="menu-button" onClick={()=>setMenuOpen(!menuOpen)} aria-label="Toggle menu">{menuOpen?<X/>:<Menu/>}</button><div className={menuOpen?"nav-links open":"nav-links"}><a href="#story" onClick={()=>setMenuOpen(false)}>Our story</a><a href="#details" onClick={()=>setMenuOpen(false)}>The day</a><a href="#attire" onClick={()=>setMenuOpen(false)}>Attire</a><a href="#gallery" onClick={()=>setMenuOpen(false)}>Gallery</a><a className="nav-rsvp" href="#rsvp" onClick={()=>setMenuOpen(false)}>RSVP</a></div></nav>
+    <button className="music-control" onClick={toggleMusic} aria-label={musicPlaying?"Pause background music":"Play background music"}>{musicPlaying?<Volume2/>:<VolumeX/>}<span>{musicPlaying?"Music on":"Music off"}</span></button>
+    <section className="hero" id="home"><img src="/images/9e855fdb-6a91-46ee-b436-e5d7843d88c6.jpg" alt="Dexter and Rosemarie"/><div className="hero-shade"/><div className="hero-copy"><p className="eyebrow">We are getting married</p><h1><span>Dexter</span><i>&amp;</i><span>Rosemarie</span></h1><p className="hero-date">03 · 10 · 2026&nbsp;&nbsp; — &nbsp;&nbsp;Magalang, Pampanga</p></div><a className="scroll-cue" href="#story"><span>Our invitation</span><ChevronDown/></a></section>
+    <section className="intro section" id="story"><p className="eyebrow rust">Together with our families</p><h2>We joyfully invite you<br/>to celebrate our love.</h2><p className="intro-copy">As we begin a new chapter together, your presence would make our day even more meaningful.</p><div className="parents"><div><span>Parents of the groom</span><p>Wilson Pangilinan<br/>Myrna Presbitero</p></div><Heart/><div><span>Parents of the bride</span><p>Ronelo Acala<br/>Gemma Acala</p></div></div></section>
+    <section className="date-band"><div><p>Save the date</p><h2>October 3, 2026</h2><span>Saturday · One o’clock in the afternoon</span></div><Countdown/></section>
+    <section className="details section" id="details"><div className="section-heading"><p className="eyebrow rust">The wedding day</p><h2>Where &amp; when</h2></div><div className="detail-grid"><article><div className="detail-icon"><CalendarDays/></div><p className="detail-number">01</p><h3>Ceremony</h3><p>Iglesia Ni Cristo<br/>Lokal ng Sapalibutad</p><strong><Clock3/>1:00 PM</strong><a href="https://maps.google.com/?q=Iglesia+Ni+Cristo+Lokal+ng+Sapalibutad" target="_blank" rel="noreferrer"><MapPin/>View location</a></article><article><div className="detail-icon"><Heart/></div><p className="detail-number">02</p><h3>Reception</h3><p>Finizzio Grande<br/>Bornal St., Sta. Cruz, Magalang</p><strong><Clock3/>4:00 PM</strong><a href="https://maps.google.com/?q=Finizzio+Grande+Magalang+Pampanga" target="_blank" rel="noreferrer"><MapPin/>View location</a></article></div></section>
+    <section className="attire" id="attire"><div className="attire-image"><img src="/images/3a7257fc-fe4c-4e91-afb9-f70a3222d557.jpg" alt="Wedding attire inspiration"/></div><div className="attire-copy"><p className="eyebrow">Dress code</p><h2>Autumn formal</h2><p>We kindly encourage our guests to wear formal attire in warm, earthy wedding colors.</p><div className="swatches">{["#4b1d0b","#74330f","#994822","#bd5d2a","#d67a35","#dda165","#e8bd8b"].map(color=><span key={color} style={{background:color}}/>)}</div><small>Please reserve white for the bride.</small></div></section>
+    <section className="gallery section" id="gallery"><div className="section-heading"><p className="eyebrow rust">A little glimpse of us</p><h2>Our favorite moments</h2></div><div className="photo-grid">{photos.map((photo,index)=><figure key={photo} className={`photo-${index+1}`}><img src={`/images/${photo}`} alt={`Dexter and Rosemarie, photo ${index+1}`} loading="lazy"/></figure>)}</div></section>
+    <section className="rsvp" id="rsvp"><div className="rsvp-panel"><p className="eyebrow">We hope you can join us</p><h2>Kindly respond</h2><p>Please confirm on or before <strong>September 25, 2026</strong>. Seats are limited to confirmed guests. This will be an adults-only celebration.</p><div className="contact-buttons"><a href="sms:+639363468327"><MessageCircle/>Text Dexter<span>0936 346 8327</span></a><a href="sms:+639657245903"><MessageCircle/>Text Rose<span>0965 724 5903</span></a></div><small>Also available on Messenger: Dexter Presbitero</small></div></section>
+    <footer><button className="footer-mark" onClick={()=>{setOpened(false);window.scrollTo(0,0)}}>D<span>&amp;</span>R</button><p>October 3, 2026 · Magalang, Pampanga</p><span>Made with love</span></footer>
+  </main>
 }
