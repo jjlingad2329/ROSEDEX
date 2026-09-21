@@ -1,0 +1,100 @@
+/* Boarding pass treatment based on the couple's supplied invitation artwork. */
+.rsvp-complete .boarding-pass {
+  position: relative;
+  grid-template-columns: minmax(0, 1fr) 23%;
+  width: 100%;
+  aspect-ratio: 1600 / 632;
+  overflow: hidden;
+  border: 8px solid #fffaf4;
+  background: #fffaf4 url('/images/boarding-pass-design.jpeg') center / cover no-repeat;
+  box-shadow: 0 28px 80px rgba(0,0,0,.48);
+}
+
+.rsvp-complete .pass-main {
+  position: relative;
+  min-width: 0;
+  padding: 0;
+  background: transparent;
+}
+
+.rsvp-complete .pass-main > .pass-kicker,
+.rsvp-complete .pass-main > h3,
+.rsvp-complete .pass-main > .pass-route {
+  display: none;
+}
+
+.rsvp-complete .pass-main dl {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: .28rem 1rem .34rem;
+  border: 0;
+  border-top: 1px solid rgba(160,60,25,.25);
+  background: rgba(255,250,244,.94);
+  box-shadow: none;
+}
+
+.rsvp-complete .pass-main dl div { display: none; }
+.rsvp-complete .pass-main dl div:first-child {
+  display: block;
+  border: 0;
+  padding: 0;
+}
+.rsvp-complete .pass-main dt { display: none; }
+.rsvp-complete .pass-main dd {
+  max-width: 100%;
+  overflow: hidden;
+  color: #342019;
+  font-size: clamp(.68rem,.9vw,.85rem);
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.rsvp-complete .pass-stub {
+  position: relative;
+  border-left: 3px dashed #b9471e;
+  padding: 0;
+  background: transparent;
+}
+
+.rsvp-complete .pass-stub > * { display: none; }
+
+@media (max-width: 780px) {
+  .rsvp-complete .boarding-pass {
+    grid-template-columns: 77% 23%;
+    width: 100%;
+    aspect-ratio: 1600 / 632;
+    min-height: 0;
+    margin-inline: 0;
+    border-width: 4px;
+    background-size: 100% 100%;
+    background-position: center;
+  }
+  .rsvp-complete .pass-main { min-height: 0; }
+  .rsvp-complete .pass-main dl { display: none; }
+  .rsvp-complete .pass-stub {
+    min-height: 0;
+    border-top: 0;
+    border-left: 2px dashed #b9471e;
+    background: transparent;
+  }
+}
+
+@media print {
+  .rsvp-complete .boarding-pass {
+    aspect-ratio: 1600 / 632;
+    grid-template-columns: minmax(0,1fr) 23%;
+    border: 0;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+  .rsvp-complete .pass-main { min-height: 0; }
+  .rsvp-complete .pass-stub { border-top: 0; border-left: 3px dashed #b9471e; }
+}
