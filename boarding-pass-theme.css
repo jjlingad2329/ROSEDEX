@@ -87,6 +87,10 @@
   }
 }
 
+.rsvp-form label:nth-of-type(4) {
+  display: none;
+}
+
 @media print {
   .rsvp-complete .boarding-pass {
     aspect-ratio: 1600 / 632;
